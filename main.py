@@ -20,12 +20,12 @@ file2 = open('result.txt','a')
 index =0
 for l in file1:
 	index+=1
-	if(2001=<index<=4000):
+	if(index>=11 and index<=15):
 		l=l.strip()
 		parse_str = doParse(l)
 		words,quality = parseResult(parse_str)
 		Type,critical = doExtract(words,quality)
-		if len(critical==0):
+		if len(critical)==0:
 			finalanswer="NO ANSWER"
 			print(index,'\t',finalanswer)
 			file2.write(str(index)+'\t'+finalanswer+'\n')
