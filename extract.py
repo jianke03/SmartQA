@@ -28,15 +28,17 @@ def doExtract(words,quality):
     Number=False
     Place=False
     Time=False
+    index=0
     for word in words:
         if word=='谁' or word=='哪位' or word=='名叫':
             People=True
-        if word.find('多少')!=-1 or word.find('几')!=-1:
+        if (word.find('多少')!=-1 or word.find('几')!=-1) and (quality[index]=='m'):
             Number=True
         if word=='位于' or word=='哪里':
             Place=True
         if word=="何时" or word=="哪年" or word=="哪一年":
-            Time=True        
+            Time=True 
+        index+=1           
     criticalWords=[]
     for i in range(len(words)):
         if quality[i] in criticalQuality and words[i] not in stopWords and words[i][0]!='一' and words[i][0]!='几':

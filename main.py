@@ -15,22 +15,22 @@ obj.init(sememefile,glossaryfile)
 
 
 file1 = open('question.txt','r')
+file2 = open('result.txt','a')
+
 index =0
 for l in file1:
 	index+=1
-	if(index==2):
+	if(2001=<index<=4000):
 		l=l.strip()
 		parse_str = doParse(l)
 		words,quality = parseResult(parse_str)
 		Type,critical = doExtract(words,quality)
 		critical.append(Type)
 		returnParas = doFindPara(critical)
-		print(returnParas)
 		reglist = getModels(words,Type)
-		print(reglist)
-		#finalanswer = 
-		doChoose(reglist,returnParas,Type,critical,obj)
-		#print(finalanswer)	
-		break
+		finalanswer = doChoose(reglist,returnParas,Type,critical,obj)
+		print(index,'\t',finalanswer)
+		file2.write(str(index)+'\t'+finalanswer+'\n')
+		continue	
 file1.close()	
 
