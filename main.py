@@ -25,12 +25,17 @@ for l in file1:
 		parse_str = doParse(l)
 		words,quality = parseResult(parse_str)
 		Type,critical = doExtract(words,quality)
-		critical.append(Type)
-		returnParas = doFindPara(critical)
-		reglist = getModels(words,Type)
-		finalanswer = doChoose(reglist,returnParas,Type,critical,obj)
-		print(index,'\t',finalanswer)
-		file2.write(str(index)+'\t'+finalanswer+'\n')
+		if len(critical==0):
+			finalanswer="NO ANSWER"
+			print(index,'\t',finalanswer)
+			file2.write(str(index)+'\t'+finalanswer+'\n')
+		else:
+			critical.append(Type)
+			returnParas = doFindPara(critical)
+			reglist = getModels(words,Type)
+			finalanswer = doChoose(reglist,returnParas,Type,critical,obj)
+			print(index,'\t',finalanswer)
+			file2.write(str(index)+'\t'+finalanswer+'\n')
 		continue	
 file1.close()	
 
