@@ -73,6 +73,8 @@ def caldisweight(critical,Para,word):
 		if tempindex!=-1:
 			totaldis+=abs(tempindex-iniloc)
 			matchNum+=1
+	if totaldis ==0:
+		return 0
 	score = matchNum/totaldis
 	return 	score
 
