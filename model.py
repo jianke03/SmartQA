@@ -84,7 +84,16 @@ def getModels(words, Type):
 				elif words[idx] == '几':
 					if idx < len(words) - 2:
 						model.append(makeModel(['?',words[idx+1],words[idx+2]], 9))
-					model.append(makeModel(['?',words[idx+1]], 4))
+						if idx > 0:
+							model.append(makeModel([words[idx-1],'?',words[idx+1], words[idx+2], 10]))
+					if idx < len(words) - 1:
+						model.append(makeModel(['?',words[idx+1]], 4))
+						if idx > 0:
+							model.append(makeModel([words[idx-1],'?',words[idx+1]], 8))
+					if idx > 1:
+						model.appemd(makeModel([words[idx-2],words[idx-1],'?'], 8))
+					if idx > 0:
+						model.append(makeModel([words[idx-1],'?']), 4)
 					#model.append(makeModel(['?'], 1))
 					return model
 				else:
