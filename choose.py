@@ -130,7 +130,7 @@ def doChoose(regList,paras,Type,critical,obj):
 	if len(sortedlist) == 0:
 		return "NO ANSWER"
 	if Type=="Time" or Type=="Number":
-		return sortedlist[0]
+		return sortedlist[0][0]
 	if Type=="People":
 		Type="人"
 	if Type=="Place":

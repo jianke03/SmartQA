@@ -38,7 +38,7 @@ def findIn(words, word):
 	return -1
 
 def getModels(words, Type):
-	print(words,Type)
+	#print(words,Type)
 	model = []
 	if Type == 'People':
 		idx = -1
