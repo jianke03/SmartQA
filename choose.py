@@ -2,6 +2,7 @@ from scrap_baike import get_hypernym
 import jieba.posseg as pseg
 import re
 from collections import defaultdict
+import csv
 BETA = [0.5,0.2,0.17,0.13]
 GAMA = 0.2
 DELTA = 0.2
@@ -25,15 +26,33 @@ def extractUpper(word):
 			secondword= i.word
 	if 	secondword != "NO":
 		tagset.add(secondword)
+	file1 = open('upperWord/'+word,'w')
+	writer1 = csv.writer(file1)
+	for tag in tagset:
+		writer1.writerow([tag])
+	file1.close()	
 	return tagset		
 def relate(word,Type,obj):
-	tags = extractUpper(word)
+	find = False
+	tags = set()
+	try:
+		file2=open('upperWord/'+word,'r')
+		find=True
+	except:
+		pass
+	if find:
+		for l in file2:
+			l=l.strip()
+			tags.add(l)
+		file2.close()
+	else:
+		tags = extractUpper(word)
 	score = -2
-	print(tags,'     ',word)
+	#print(tags,'     ',word)
 	for tag in tags:
 		tempscore = obj.calc(Type, tag, BETA, GAMA, DELTA, ALFA)
 		score = max(score , tempscore)
-	print(word,'  ',Type,'  ',score)
+	#print(word,'  ',Type,'  ',score)
 	if score > 0:
 		if score> 0.5:
 			return 0.5
@@ -92,7 +111,7 @@ def doChoose(regList,paras,Type,critical,obj):
 					# weight decided by the index in the matched part
 					tempRel = regpart[2]/float(weight)
 					thisweight = int(paraweight/5)+1
-					print(i.word,'this weight :',thisweight)
+					#print(i.word,'this weight :',thisweight)
 					tempPar = 1/thisweight
 					tempDis = caldisweight(critical,para,i.word)
 					if tempRel+tempDis+tempPar > (wordreliable[i.word]
@@ -105,11 +124,10 @@ def doChoose(regList,paras,Type,critical,obj):
 	wordscore = dict()
 	for i in wordlist:
 		wordscore[i]=wordreliable[i]+wordParaweight[i]+wordDisweight[i]	
-		print(i,wordreliable[i],wordParaweight[i],wordDisweight[i])				
+		#print(i,wordreliable[i],wordParaweight[i],wordDisweight[i])				
 	sortedlist = sorted(wordscore.items(),key=lambda i:i[1],reverse=True)
 	#print(sortedlist)
 	if len(sortedlist) == 0:
-		print("NO ANSWER")
 		return "NO ANSWER"
 	if Type=="Time" or Type=="Number":
 		return sortedlist[0]
@@ -130,7 +148,6 @@ def doChoose(regList,paras,Type,critical,obj):
 			if sortedlist[i][1]+tempscore > topscore:
 				topscore = sortedlist[i][1]+tempscore
 				maxword = sortedlist[i][0]	
-	print(maxword)#,topscore)
 	return maxword						
 		
 
