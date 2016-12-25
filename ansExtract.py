@@ -8,7 +8,10 @@ peopleList = ["者","人","家","员","代表","男","女","名字","代表"]
 placeList = ["国籍","国家","洲","洋","山","河","地区","地点","县","市","省","州","处"]
 timeList = ["年","月","日","时间"]
 tagList = [peopleList,placeList,timeList]
-
+BETA = [0.5,0.2,0.17,0.13]
+GAMA = 0.2
+DELTA = 0.2
+ALFA = 1.6
 def findAskPos(wordList):
 	if wordList[len(wordList)-1][0] == "是":
 		return len(wordList)
@@ -48,8 +51,26 @@ def getTypeStr(typeInfo):
 			typeStr = "null"
 	return typeStr
 
+def contain(s1, s2):
+	if s1 == s2:
+		return True
+	if len(s1) < len(s2):
+		ok = True
+		for i in range(len(s1)):
+			if s2.find(s1[i]) < 0:
+				ok = False
+				break
+		return ok
+	else:
+		ok = True
+		for i in range(len(s2)):
+			if s1.find(s2[i]) < 0:
+				ok = False
+				break
+		return ok
 
-def check(sourceList, wordList, typeStr, typeInfo):
+
+def check(sourceList, wordList, typeStr, typeInfo,obj):
 	AskPos = findAskPos(wordList)
 	retList = []
 	length = len(wordList)
@@ -75,14 +96,42 @@ def check(sourceList, wordList, typeStr, typeInfo):
 						if sourceList[i][j][0].find(placeBadList[k]) != -1:
 							tag = 1
 				for k in range(len(wordList)):
-					if sourceList[i][j][0]== wordList[k][0] or wordList[k][0].find(sourceList[i][j][0]) != -1:
+					#if sourceList[i][j][0]== wordList[k][0] or wordList[k][0].find(sourceList[i][j][0]) != -1:
+					if contain(sourceList[i][j][0], wordList[k][0]):
 						tag = 1
 						break
 				if tag == 1:
-					continue
+					continue	
 				ansList.append([sourceList[i][j][0],j])
-				goodVal.append(0)
+				#goodVal.append(0)
 
+		#print(ansList)
+		if typeInfo != "NO":
+			newans = []
+			simi = []
+			mx = 0
+			for k in range(len(ansList)):
+				s = obj.calc(typeInfo, ansList[k][0], BETA, GAMA, DELTA, ALFA)
+				simi.append([ansList[k][0],s])
+				mx = max(mx, s)
+			#print(simi)
+			if mx >= 0.15:
+				for k in range(len(ansList)):
+					if (simi[k][1] >= 0.15 or simi[k][1] == -2):
+						newans.append(ansList[k])
+			elif mx >= 0.15:
+				for k in range(len(ansList)):
+					if (simi[k][1] >= 0.15 or simi[k][1] == -2):
+						newans.append(ansList[k])
+			else:
+				for k in range(len(ansList)):
+					if (simi[k][1] == -2):
+						newans.append(ansList[k])
+			if len(newans) > 0:
+				ansList = newans
+		#print(ansList)
+		for l in range(len(ansList)):
+			goodVal.append(0)
 		if len(ansList) == 0:
 			continue
 
@@ -100,6 +149,7 @@ def check(sourceList, wordList, typeStr, typeInfo):
 								goodVal[p] += abs(1.0/((j-ansList[p][1])*(k-AskPos)))			
 		val = 0
 		pos = 0
+		#print(goodVal)
 		for j in range(len(goodVal)):
 			#print ansList[j][0]+"***"+str(goodVal[j])
 			if goodVal[j] > val:
@@ -108,5 +158,5 @@ def check(sourceList, wordList, typeStr, typeInfo):
 
 		#result.write("ANSWER IS: "+ansList[pos][0].encode('utf-8')+"\n")
 		retList.append([ansList[pos][0],sourceList[i][ansList[pos][1]][1]])
-	
+	#print(retList)
 	return retList

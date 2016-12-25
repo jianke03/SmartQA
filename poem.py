@@ -45,7 +45,18 @@ def judgePoem(question, id):
 
 	#print(question)
 	wiki = open('wiki.txt')
-	ofile = open('poem/'+str(id), 'w')
+	find = False
+	ofile = ""
+	try:
+		ofile = open('poem/'+str(id), 'r')
+		find = True
+		wiki.close()
+		wiki = ofile
+	except:
+		pass
+
+	if not find:
+		ofile = open('poem/'+str(id), 'w')
 	for line in wiki:
 		
 		end = 0
@@ -56,7 +67,8 @@ def judgePoem(question, id):
 		idx = line.find(content)
 		if idx >= 0 and d == 1:
 			#print(line)
-			ofile.write(line)
+			if not find:
+				ofile.write(line)
 			idx += len(content)
 			if line[idx] == '”' or line[idx] == '“':
 				continue
@@ -103,7 +115,10 @@ def judgePoem(question, id):
 				wiki.close()
 				return line[end+1:idx-1]
 	ofile.close()
-	wiki.close()
+	try:
+		wiki.close()
+	except:
+		pass
 	return "NO"
 
 '''

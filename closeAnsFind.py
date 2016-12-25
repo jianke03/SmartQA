@@ -7,7 +7,7 @@ import codecs
 import jieba
 import jieba.posseg as pseg
 
-def ansFind(wikiList, typeInfo, Ques):
+def ansFind(wikiList, typeInfo, Ques,obj):
 	wordList = convert.solve(Ques)
 	keyList =  convert.getKeyWords(wordList)
 	for j in range(len(wordList)):
@@ -27,5 +27,5 @@ def ansFind(wikiList, typeInfo, Ques):
 		sourceList.append(relevantList)
 
 	typeStr = ansExtract.getTypeStr(typeInfo)
-	ansList = ansExtract.check(sourceList, wordList, typeStr, typeInfo)
-	return ansDecide.chooseAns(ansList, typeStr)
+	ansList = ansExtract.check(sourceList, wordList, typeStr, typeInfo,obj)
+	return ansDecide.chooseAns(ansList, typeStr,typeInfo,obj)

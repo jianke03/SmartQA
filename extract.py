@@ -65,7 +65,9 @@ def doExtract(words,quality):
                 if quality[tempindex+1] in noun:
                     Type=words[tempindex+1]
                     break
-                tempindex+=1            
+                tempindex+=1
+            if Type!="NO":
+                break                
             if words[index-1]=='是':
                 index=index-1
             if index>=1:
@@ -78,7 +80,9 @@ def doExtract(words,quality):
                 if quality[tempindex+1] in noun:
                     Type=words[tempindex+1]
                     break 
-                tempindex+=1               
+                tempindex+=1
+            if Type !="NO":
+                break                   
         if words[index]=='是':
             if index>=1:
                 if quality[index-1] in noun:

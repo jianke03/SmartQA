@@ -18,23 +18,22 @@ obj.init(sememefile,glossaryfile)
 
 file1 = open('question.txt','r')
 file2 = open('result.txt','a')
-file4 = open('result_2.txt','a')
 
 index =0
 for l in file1:
 	index+=1
-	if(index <= 10 and index>=1):
+	if(index >= 1 and index <= 7000):
 		l=l.strip()
 		poemresult = judgePoem(l,index)
 		if poemresult =="NO":	
 			parse_str = doParse(l)
 			words,quality = parseResult(parse_str)
 			Type,critical = doExtract(words,quality)
+			#print(Type, critical)
 			if len(critical)==0:
 				finalanswer="NO ANSWER"
 				print(index,'\t',finalanswer)
 				file2.write(str(index)+'\t'+finalanswer+'\n')
-				file4.write(str(index)+'\t'+finalanswer+'\n')
 			else:
 				critical.append(Type)
 				find =False
@@ -56,18 +55,15 @@ for l in file1:
 						file3.write(resultline+'\n')
 					file3.close()
 					#print('create a search file')				
-				reglist = getModels(words,Type)
+				reglist = getModels(words, quality, Type)
 				finalanswer_1 = doChoose(reglist,returnParas,Type,critical,obj)
-				finalanswer_2 = ansFind(returnParas, Type, parse_str)
+				if finalanswer_1=="NO ANSWER":
+					finalanswer_1 = ansFind(returnParas, Type, parse_str,obj)
 				print(index,'\t',finalanswer_1)
-				print(index,'\t',finalanswer_2)
 				file2.write(str(index)+'\t'+finalanswer_1+'\n')
-				file4.write(str(index)+'\t'+finalanswer_2+'\n')
 		else:
 			print(index,'\t',poemresult)
-			file2.write(str(index)+'\t'+poemresult+'\n')
-			file4.write(str(index)+'\t'+poemresult+'\n')	
+			file2.write(str(index)+'\t'+poemresult+'\n')	
 file1.close()	
 file2.close()
-file4.close()
 
